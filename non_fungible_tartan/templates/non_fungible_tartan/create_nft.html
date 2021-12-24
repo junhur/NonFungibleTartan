@@ -1,0 +1,160 @@
+{% extends "non_fungible_tartan/base.html" %}
+
+{% block content %}
+    <section class="vh-100" style="background-color: #2b2d2e;">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-xl-12">
+                    <div class="row align-items-center pt-3 pb-3">
+                        <div class="col-md-9 ps-5 pb-3">
+                        <h1 class="text-white mb-4">Create your own NFT</h1>
+                    </div>
+                    </div>
+                    <div class="card" style="border-radius: 15px">
+                        <div class="container">
+                            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#instructions-modal">
+                                View Instructions
+                            </button>
+                            <div class="modal fade" id="instructions-modal" tabindex="-1" aria-labelledby="instructions-modal-label" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Instructions</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <ul class="nav nav-tabs" id="instruction-tabs" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab" aria-controls="upload" aria-selected="true">
+                                                        Upload Existing Image
+                                                    </button>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link" id="create-tab" data-bs-toggle="tab" data-bs-target="#create" type="button" role="tab" aria-controls="create" aria-selected="false">
+                                                        Create Your Own Art
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content" id="myTabContent">
+                                                <div class="tab-pane fade show active" id="upload" role="tabpanel" aria-labelledby="upload-tab">
+                                                    <div class="pt-3">
+                                                        <ol>
+                                                            <li> Fill in Name, Asking Price, and Descriptions </li>
+                                                            <li> Decide to put up for auction immediately </li>
+                                                            <li> Choose file from your local device </li>
+                                                            <li> Click on Submit </li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="create" role="tabpanel" aria-labelledby="create-tab">
+                                                    <div class="pt-3">
+                                                        <ol>
+                                                            <li> Click on a white pixel to color it in </li>
+                                                            <li> Click on a colored pixel to erase it </li>
+                                                            <li> Choose the color of your choice on the color picker </li>
+                                                            <li> When you're done, click on Finalize </li>
+                                                            <li> Your art should have turned in to an image. <br/> Right click on the image to Save image as... </li>
+                                                            <li> Fill in Name, Asking Price, and Descriptions </li>
+                                                            <li> Decide to put up for auction immediately </li>
+                                                            <li> Upload the file you just saved </li>
+                                                            <li> Click on Submit </li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="card-content" class="card-body">
+                            <form method="post" enctype="multipart/form-data" action="{% url 'create_nft' %}">
+                                <div class="container">
+                                    <div class="row">
+                                            <div class="col-md-5">
+                                                <div id="id-create-palette"></div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <input class="form-control-md" name="name" placeholder="Name"/>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <input class="form-control-md" name="asking_price" placeholder="Asking Price"/>
+                                                        </div>
+                                                        <div class="col-md-4 d-flex justify-content-center gx-2">
+                                                            <label for="id-color-picker">Brush color: </label>
+                                                            &nbsp;
+                                                            <input id="id-color-picker" type="color">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <br/>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-11">
+                                                            <textarea placeholder="Description goes here" class="form-control" name="description" rows="5"></textarea>
+                                                            <br/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 d-flex justify-content-center">
+                                                            <input class="form-control-md" id="id-nft-image" name="image" onchange="readURL(this, 'create-nft')" type="file">
+                                                        </div>
+                                                        <div class="col-md-4 form-check">
+                                                            <input
+                                                                class="form-check-input"
+                                                                type="checkbox"
+                                                                name="is_for_sale"
+                                                                data-bs-toggle="collapse"
+                                                                data-bs-target="#aucdatetime"
+                                                                aria-expanded="false"
+                                                                aria-controls="aucdatetime"
+                                                            />
+                                                            <label class="form-check-label" for="flexCheckChecked">
+                                                                Put up for auction
+                                                            </label>                                                            
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="row">
+                                                        <div id="aucdatetime" class="collapse multi-collapse"><label for="auctiontime">Auction end date and time:</label>
+                                                        <input type="datetime-local" id="endtime" name="auctiontime"></div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <script>
+                                        makeCells();
+                                    </script>
+                                    <div class="row align-items-center pt-3 pb-3">
+                                        <div class="col-md-9 ps-5 pb-1">
+                                            <div class="text-danger">
+                                                {{ error }}
+                                            </div>
+                                            <div class="text-success">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 ps-5 pb-1">
+                                            <button id="id-finalize-button" class="btn btn-dark btn-lg" onclick="finalizeImage()" type='button'>Finalize</button>
+                                        </div>
+                                        <div class="col-md-2 ps-5 pb-1">
+                                            <button id="id-create-button" class="btn btn-dark btn-lg" disabled type='submit'>Submit</button>
+                                        </div>
+                                    </div>
+                                    {% csrf_token %}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

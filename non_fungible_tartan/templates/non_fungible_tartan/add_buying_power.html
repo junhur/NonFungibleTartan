@@ -1,0 +1,202 @@
+{% extends "non_fungible_tartan/base.html" %}
+
+{% block content %}
+    <section class="vh-100" style="background-color: #2b2d2e;">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-xl-9">
+                    <h1 class="text-white mb-4">Add Buying Power for {{ user.first_name }} {{ user.last_name }}</h1>
+                    <div class="card" style="border-radius: 15px;">
+                        <div class="card-body">
+                            <form method="post" action="{% url 'add_power' %}">
+                                <h6>Payment Details</h6>
+                                <hr class="mx-n3">
+                                <div class="row d-flex align-items-center pb-3">
+                                <div class="col-md-12">
+                                    <input
+                                        class="form-control form-control-lg"
+                                        type="text" name="name_on_card"
+                                        placeholder="Name on Card"
+                                    >
+                                    {% for error in form.name_on_card.errors %}
+                                        <div class="text-danger">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                                <div class="row d-flex align-items-center">
+                                <div class="col-md-6">
+                                    <input
+                                        class="form-control form-control-lg"
+                                        type="text" name="card_number"
+                                        placeholder="Card Number"
+                                    >
+                                    {% for error in form.card_number.errors %}
+                                        <div class="text-danger">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-3">
+                                    <input
+                                        class="form-control form-control-lg"
+                                        type="text" name="expiration_date"
+                                        placeholder="MM/YYYY"
+                                    >
+                                    {% for error in form.expiration_date.errors %}
+                                        <div class="text-danger">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-3">
+                                    <input
+                                        class="form-control form-control-lg"
+                                        type="text" name="cvc"
+                                        placeholder="CVC"
+                                    >
+                                    {% for error in form.cvc.errors %}
+                                        <div class="text-danger">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                                <br/><br/>
+                                <h6>Billing Address</h6>
+                                <hr class="mx-n3">
+                                <div class="row d-flex align-items-center pb-3">
+                                <div class="col-md-6">
+                                    <input
+                                        class="form-control form-control-lg"
+                                        type="text" name="address"
+                                        placeholder="Street Address"
+                                    >
+                                    {% for error in form.address.errors %}
+                                        <div class="text-danger">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-6">
+                                    <input
+                                        class="form-control form-control-lg"
+                                        type="text" name="city"
+                                        placeholder="City"
+                                    >
+                                    {% for error in form.city.errors %}
+                                        <div class="text-danger">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                                <div class="row d-flex align-items-center pb-3">
+                                <div class="col-md-6">
+                                    <input
+                                        class="form-control form-control-lg"
+                                        type="text" name="state"
+                                        placeholder="State/Province"
+                                    >
+                                    {% for error in form.state.errors %}
+                                        <div class="text-danger">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-6">
+                                    <input
+                                        class="form-control form-control-lg"
+                                        type="text" name="zipcode"
+                                        placeholder="Zip code"
+                                    >
+                                    {% for error in form.zipcode.errors %}
+                                        <div class="text-danger">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                                <br/><br/>
+                                <h6>Payment Amount</h6>
+                                <hr class="mx-n3">
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="amount"
+                                    id="inlineRadio1"
+                                    value="5"
+                                />
+                                <label class="form-check-label" for="inlineRadio1">$5.00</label>
+                            </div>
+                                    <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="amount"
+                                    id="inlineRadio2"
+                                    value="10"
+                                />
+                                <label class="form-check-label" for="inlineRadio2">$10.00</label>
+                            </div>
+                                    <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="amount"
+                                    id="inlineRadio3"
+                                    value="20"
+                                />
+                                <label class="form-check-label" for="inlineRadio3">$20.00</label>
+                            </div>
+                                    <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="amount"
+                                    id="inlineRadio4"
+                                    value="50"
+                                />
+                                <label class="form-check-label" for="inlineRadio4">$50.00</label>
+                            </div>
+                                    <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="amount"
+                                    id="inlineRadio5"
+                                    value="100"
+                                />
+                                <label class="form-check-label" for="inlineRadio5">$100.00</label>
+                            </div>
+                                    {% for error in form.amount.errors %}
+                                        <div class="text-danger">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% csrf_token %}
+                                <div class="row align-items-center pt-3 pb-3">
+                                    <div class="col-md-9 pb-1">
+                                        <div class="text-danger">
+                                            {{ error }}
+                                        </div>
+                                        <div class="text-success">
+                                            {{ message }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="submit" class="btn btn-dark btn-lg">Submit Payment</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

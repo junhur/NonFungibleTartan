@@ -1,0 +1,42 @@
+{% extends "non_fungible_tartan/base.html" %}
+
+{% block content %}
+    <section class="page-container vh-100">
+        <div class="page-header">
+            <h1 class="text-white mb-4">Home Page of {{ user.first_name }} {{ user.last_name }}</h1>
+        </div>
+        
+        <br>
+        <div class="section-header">
+            <h5>Live Auctions</h5>
+        </div>
+        <div class="auction-page">
+            <div class="row">
+                {% for auc in auctions %}
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <a href="{% url 'nft_details' auc.nft.id %}">
+                                    <img src="{% url 'photo' auc.nft.id %}" alt="image-placeholder" id="id_nft_{{auc.id}}" /><br>
+                                </a>
+                                <a id="id_artist_{{auc.nft.original_owner.id}}" href="{% url 'profile' auc.nft.original_owner.id %}">Artist: {{auc.nft.original_owner.first_name}} {{auc.nft.original_owner.last_name}}</a>
+                                <p id="id_creationdate_{{auc.id}}">NFT Creation Date: {{auc.nft.create_time}}</p>
+                                <a href="{% url 'nft_details' auc.nft.id %}" class="btn btn-primary">Place Bid</a>
+                                <br/><br/>
+                                <a id="id_artist_{{auc.seller.id}}" href="{% url 'profile' auc.seller.id %}">Seller: {{auc.seller.first_name}} {{auc.seller.last_name}}</a>
+                                <br/>
+                                <span>Auction Time Left:</span>
+                                <p id="countdown_{{auc.id}}"></p>
+                                <script>
+                                    var a_id = "{{auc.id}}";
+                                    var a_et = "{{auc.end_time|date:'U'}}";
+                                    create_interval(stuffing, a_id, a_et);
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

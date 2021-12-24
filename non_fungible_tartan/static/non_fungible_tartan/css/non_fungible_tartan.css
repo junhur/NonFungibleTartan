@@ -1,0 +1,82 @@
+.errorlist {
+    color: red;
+    font-size: x-large;
+}
+
+.page-container {
+    padding: 10px;
+    background-color: #2b2d2e;
+  }
+
+.section-header {
+    display: flex;
+    background-color: cornsilk;
+}
+
+.section-header h5 {
+    flex-grow: 1;
+    margin: 5px;
+    display: flex;
+}
+
+.section-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2px;
+}
+
+.auction-page > .row {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.auction-page > .row > .col-md-3 {
+    display: inline-block;
+    float: none;
+}
+
+.card {
+    padding: 2%;
+    flex-basis: 16%;
+    display: flex;
+    margin: 1px;
+}
+
+.bid-box {
+    margin-top: auto;
+}
+
+
+.card img {
+    display: flex;
+    max-width: 100%;
+}
+
+.profile-page-img {
+    max-width: 100%;
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: #2b2d2e;
+    border: solid 1px #2b2d2e;
+}
+
+.create-palette-td {
+    width: 1.2vw;
+    height: 1.2vw;
+    border: 1px solid black;
+}
+
+.palette-button {
+    width: 1.2vw;
+    height: 1.2vw;
+    display: block;
+}
+
+.create-palette-tr {
+    height: 1.2vw;
+    width: 1.2vw;
+}

@@ -1,0 +1,56 @@
+{% extends "non_fungible_tartan/base.html" %}
+
+
+{% block content %}
+    <section class="vh-100" style="background-color: #2b2d2e;">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card shadow-2-strong" style="border-radius: 15px;">
+                        <div class="card-body p-5 text-center">
+                            <h3 class="mb-5">Sign in</h3>
+                            <form method="post" action="{% url 'login' %}">
+                                {% for field in form.visible_fields %}
+                                    <div class="form-outline mb-4">
+                                        {{ field }}
+                                    </div>
+                                {% endfor %}
+
+                                {% for field in form.visible_fields %}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger pb-2">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+
+                                <div class="d-grid">
+                                    <button class="btn btn-dark btn-lg" type="submit">Login</button>
+                                </div>
+                                {% csrf_token %}
+                            </form>
+                            <hr class="my-4">
+                            <div class="g-signin2 btn btn-lg" data-onsuccess="onSignIn" data-longtitle="true" ></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        const csrfToken = "{{ csrf_token }}";
+        function onSignIn(googleUser) {
+            var id_token = googleUser.getAuthResponse().id_token;
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.disconnect();
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'login-google', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                window.location.replace('/');
+            };
+            xhr.send('idtoken=' + id_token + "&csrfmiddlewaretoken="+csrfToken);
+        }
+    </script>
+{% endblock %}

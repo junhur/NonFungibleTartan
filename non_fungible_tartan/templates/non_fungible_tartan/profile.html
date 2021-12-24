@@ -1,0 +1,154 @@
+{% extends "non_fungible_tartan/base.html" %}
+
+{% block content %}
+    <section class="vh-100" style="background-color: #2b2d2e;">
+        <div class="container-fluid py-5">
+            <div class="row">
+                <div class="col-lg-4">
+                    <h3 class="text-white">{{ profile_owner.first_name }} {{ profile_owner.last_name }}</h3>
+                </div>
+                <div class="col-lg-4 text-white">
+                    <h3 class="text-white">Created NFTs</h3>
+                </div>
+                <div class="col-lg-4 text-white">
+                    <h3 class="text-white">Currently Owned NFTs</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card mb-4 h-100">
+                        <div class="card-body text-center">
+                            <img id="id-profile-preview" src="{{ profile.picture.url }}" height="50%">
+                            <br/><br/>
+                            <form method="post" enctype="multipart/form-data" action="{% url 'profile' %}">
+                                <input class="form-control-md" id="id_nft_image" onchange="readURL(this, 'profile')" name="picture" type="file" value="{{ profile.picture }}">
+                                <br/><br/>
+                                <textarea class="form-control" name="description" rows="5">{{ profile.description }}</textarea>
+                                {% for field in form.hidden_fields %}
+                                    {{ field }} {{ field.errors }}
+                                {% endfor %}
+                                {% if profile_owner.id == user.id %}
+                                    <div class="d-flex justify-content-end mt-3 mb-3">
+                                        <button type="submit" class="btn btn-outline-dark ms-1">Submit change</button>
+                                    </div>
+                                {% endif %}
+                                {% csrf_token %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card mb-4 h-100">
+                        <div class="card-body">
+                            <div class="container">
+                                {% if created_nft %}
+                                    {% for nfts in created_nft %}
+                                        <div class="row gx-3">
+                                            {% for nft in nfts %}
+                                                <div class="col-lg-6">
+                                                    <div class="profile-page-img">
+                                                        <a href="{% url 'nft_details' nft.id %}">
+                                                            <img src="{{ nft.resized_image_path }}">
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <br/>
+                                    {% endfor %}
+                                {% else %}
+                                    <h6>Please try creating your own NFTs!</h6>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if created_nft_pages %}
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item">
+                                    <a class="page-link text-dark" href="?created_nft_page={{ prev_created_nft_page }}&currently_hold_nft_page={{ current_hold_nft_page }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% for page_num in created_nft_pages %}
+                                    {% if page_num == current_created_nft_page %}
+                                        <li class="page-item active" aria-current="page">
+                                            <a class="page-link" href="?created_nft_page={{ page_num }}&currently_hold_nft_page={{ current_hold_nft_page }}">
+                                                {{ page_num }}
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link text-dark" href="?created_nft_page={{ page_num }}&currently_hold_nft_page={{ current_hold_nft_page }}">
+                                                {{ page_num }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="page-item">
+                                    <a class="page-link text-dark" href="?created_nft_page={{ next_created_nft_page }}&currently_hold_nft_page={{ current_hold_nft_page }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card mb-4 h-100">
+                        <div class="card-body">
+                            <div class="container">
+                                {% if current_hold_nft %}
+                                    {% for nfts in current_hold_nft %}
+                                        <div class="row gx-3">
+                                            {% for nft in nfts %}
+                                                <div class="col-lg-6">
+                                                    <div class="profile-page-img">
+                                                        <a href="{% url 'nft_details' nft.id %}">
+                                                            <img src="{{ nft.resized_image_path }}">
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <br/>
+                                    {% endfor %}
+                                {% else %}
+                                    <h6>Please try creating your own NFTs!</h6>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if current_hold_nft_pages %}
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item">
+                                    <a class="page-link text-dark" href="?created_nft_page={{ current_created_nft_page }}&currently_hold_nft_page={{ prev_current_hold_nft_page }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% for page_num in current_hold_nft_pages %}
+                                    {% if page_num == current_hold_nft_page %}
+                                        <li class="page-item active" aria-current="page">
+                                            <a class="page-link" href="?created_nft_page={{ current_created_nft_page }}&currently_hold_nft_page={{ page_num }}">
+                                                {{ page_num }}
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link text-dark" href="?created_nft_page={{ current_created_nft_page }}&currently_hold_nft_page={{ page_num }}">
+                                                {{ page_num }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                {% endfor %}
+                                <li class="page-item">
+                                    <a class="page-link text-dark" href="?created_nft_page={{ current_created_nft_page }}&currently_hold_nft_page={{ next_current_hold_nft_page }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,15 @@
+[Django]
+Secret=value
+
+[GoogleOAuth2]
+ClientId=value
+Key=value
+Secret=value
+
+[Stripe]
+Key=value
+Secret=value
+
+[MySQL]
+user=value
+password=value

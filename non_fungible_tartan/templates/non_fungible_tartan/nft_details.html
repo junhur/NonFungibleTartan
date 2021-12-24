@@ -1,0 +1,132 @@
+{% extends "non_fungible_tartan/base.html" %}
+
+{% block content %}
+    <section class="vh-100" style="background-color: #2b2d2e;">
+        <div class="container py-5 h-100">
+            <div class="row h-100">
+                <div class="col w-50">
+                    <div class="card shadow-2-strong h-100" style="margin-top: 10px;">
+                        <img src="{% url 'photo' nft.id %}" class="card-img-top" style="width: auto; height: auto; object-fit: cover;">
+                    </div>
+                </div>
+                <div class="col w-50">
+                    <div class="row h-100">
+                        <div class="col h-50 w-100">
+                            <div class="card shadow-2-strong h-100" style="margin-bottom:20px; border-radius: 15px;">
+                                <div class="card-header">NFT Details</div>
+                                <div class="card-body text-dark">
+                                    <h1 class="card-title">{{ nft.name }}</h1>
+                                    <div class="row h-50">
+                                        <div class="col">
+                                            <p class="card-text">{{ nft.description }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row h-50">
+                                        <div class="col">
+                                            <div style="text-align: center; border-radius: 5px; border-style: solid; width: 50%; margin: auto; white-space: pre-wrap;">Artist: {{nft.original_owner.first_name}} {{nft.original_owner.last_name}}&#10;Creation Date: {{ datetime }}</div>    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 h-50">
+                            <div class="card shadow-2-strong h-100" style="margin-top:20px; border-radius: 15px;">
+                                {% if nft.is_for_sale %}
+                                <div class="card-header">Auction Details <a style="float: right; color:green;">ACTIVE</a> </div>
+                                <div class="row h-75">
+                                    <div class="col w-50">
+                                        <div class="card border-dark mb-3 h-100" style="margin: 20px; border-radius: 5px;">
+                                            <div class="card-body text-dark">
+                                                <h6 class="card-title">Current Highest Bid</h6>
+                                            </div>
+                                            <div class="row h-25">
+                                                <div class="col">
+                                                    <div style="text-align: center; border-radius: 5px; border-style: solid; width: 50%; margin: auto; white-space: pre-wrap;" id="highest_bid_here"></div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body text-dark">
+                                                <h6 class="card-title">Number of Bids</h6>
+                                            </div>
+                                            <div class="row h-25">
+                                                <div class="col">
+                                                    <div style="text-align: center; font-size: 18px;" id="number_bids_here"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col w-50">
+                                        <div class="row h-25">
+                                            <div class="col">
+                                                <div style="font-size: 18px; margin-right: 20px; margin-top: 20px; text-align: left;">Starting Price: <a style="float:right;">${{ nft.asking_price }}</a></div>
+                                            </div>
+                                        </div>
+                                        <div class="row h-25">
+                                            <div class="col">
+                                                <div style="font-size: 18px; margin-right: 20px; margin-top: 20px; text-align: left;">Time Remaining: <a style="float:right;" id="countdown_"></a></div>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="row h-25">
+                                            {% if request.user != nft.current_owner %}
+                                            <form method="POST" action="{% url 'nft_details' nft.id %}">
+                                                <div class="col">
+                                                    <div style="color: red;">
+                                                        {{ message }}
+                                                    </div>
+                                                    <div>
+                                                        <input style="margin-bottom: 10px;" type="number" step="0.01" placeholder="Enter Your Bid Amount" id="bid_amount_field" name="bid_amount">
+                                                    </div>
+                                                    <div>
+                                                        <button class="btn btn-dark btn-sm" type="submit">Submit</button>
+                                                    </div>
+                                                </div>
+                                                {% csrf_token %}
+                                            </form>
+                                            {% else %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="card-header">Auction Details <a style="float: right; color:red;">INACTIVE</a> </div>
+                                {% if request.user == nft.current_owner %}
+                                <form method="POST" action="{% url 'nft_details' nft.id %}">
+                                    <div class="card-body text-dark">
+                                        <div style="color: red;">
+                                            {{ message }}
+                                        </div>
+                                        <div>
+                                            <input style="margin-bottom: 10px;" type="number" step="0.01" placeholder="Enter the Minimum Bid Price" id="minimum_bid_amount_field" name="minimum_bid_amount" value="{{ nft.asking_price }}">
+                                            
+                                            <br><label for="auctiontime">Auction end date and time:</label>
+                                            <input type="datetime-local" id="endtime" name="auctiontime">
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-dark btn-sm" type="submit">Put up for Auction</button>
+                                        </div>
+                                    </div>
+                                    {% csrf_token %}
+                                </form>
+                                {% else %}
+                                    <div class="card-body text-dark">
+                                        This NFT artwork is not currently for sale.
+                                    </div>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<script>
+    var nft_id = "{{ nft.id }}"
+    var getDetailsURL = "{% url 'get-details' %}"
+    var csrfToken = "{{ csrf_token }}"
+    var a_et = "{{auction.end_time|date:'U'}}";
+    window.onload = getDetails;
+    window.setInterval(getDetails, 5000);
+    create_interval(stuffing, "", a_et)
+</script>
+{% endblock %}
